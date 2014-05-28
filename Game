@@ -1,0 +1,115 @@
+package ticTacToe;
+
+import java.util.Scanner;
+
+public class Game 
+{
+	 private Board board;
+	    private int turn = 1, who = 1;
+	    private Player player1 = new Contestant1(1);
+	    private Player player2 = new Contestant2(2);
+	    public Scanner input = new Scanner(System.in);
+
+	    
+	    public Game()
+	    {
+	        board = new Board();
+	        
+	        while( Play() );
+	    }
+	    
+	    //play game
+	    public boolean Play()
+	    {
+	        board.showBoard();
+	        
+	        if(won() == 0 )
+	        {
+	            System.out.println("----------------------");
+	            System.out.println("\nTurn "+ turn);
+	            System.out.println("It's Player " + who() + "'s turn." );
+	            
+	            if(who() == 1)
+	                player1.play(board);
+	            else
+	                player2.play(board);
+	            
+	            //checks if full board, draws or continues game
+	            if(board.fullBoard() && won() == 0)
+	            {
+	                System.out.println("Full Board. Draw! Thanks for playing!");
+	                System.out.println("If you would like to play a new game type 'new' and hit enter");
+	                if(input.nextLine() == "new")
+	                {
+	                	board = new Board();
+	                	return true;
+	                }
+	                return false;
+	            }
+	            who++;
+	            turn++;
+
+	            return true;
+	        }
+	        else
+	        {
+	        	//Fix Restart game's input failure.... :/
+	            if(won() == -1 )
+	            {
+	                System.out.println("Player 1 won!");
+	                System.out.println("If you would like to play a new game type 'new' and hit enter");
+	                String check = input.nextLine();
+	                if(check == "new")
+	                {
+	                	System.out.println("new");
+	                	board = new Board();
+	                	return false;
+	                }
+	            }
+	            
+	            else
+	            {
+	                System.out.println("Player 2 won!");
+	                System.out.println("If you would like to play a new game type 'new' and hit enter");
+	                String check = input.nextLine();
+	                if(check == "new")
+	                {
+	                	board = new Board();
+	                	return true;
+	                }
+	            }
+	            
+	            return false;
+	        }
+	            
+	    }
+	    
+	    //determines who's turn it is
+	    public int who()
+	    {
+	        if(who % 2 == 1)
+	            return 1;
+	        else
+	            return 2;
+	    }
+	    
+	    //checks for a winner
+	    public int won()
+	    {
+	        if(board.checkrows() == 1)
+	            return 1;
+	        if(board.checkColumns() == 1)
+	            return 1;
+	        if(board.checkDiagonals() == 1)
+	            return 1;
+	        
+	        if(board.checkrows() == -1)
+	            return -1;
+	        if(board.checkColumns() == -1)
+	            return -1;
+	        if(board.checkDiagonals() == -1)
+	            return -1;
+	        
+	        return 0;
+	    }
+}
